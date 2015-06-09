@@ -1,0 +1,4 @@
+*.suo
+Source/DotNetRefEdit/bin
+Source/DotNetRefEdit/obj
+Source/DotNetRefEdit/DotNetRefEdit.csproj.user
