@@ -116,4 +116,4 @@ https://github.com/Excel-DNA/ExcelDna
 
 The **DotNetRefEdit** project demonstrates that it is possible to create .Net add-ins for Excel where UIs can behave like function wizards and allow range selections into Excel, in an user-friendly way.
 
-The "RefEdit" control itself is not hard to implement. The difficuly resides in the window management. The solution is quite simple once you know it: hook the WH_CALLWNDPROC messages using the SetWindowsHookEx function ; when the hooked message is a WM_MOUSEACTIVATE and the underlying window is a workbook, then call SetFocus.
+The "RefEdit" control itself is not hard to implement. The main difficulty resides in the window management. The solution is quite simple once you know it: hook the WH_CALLWNDPROC messages using the SetWindowsHookEx function ; when the hooked message is a WM_MOUSEACTIVATE and the underlying window is a workbook, then call SetFocus.
