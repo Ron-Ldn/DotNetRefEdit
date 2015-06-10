@@ -78,7 +78,7 @@ The hook method "CwpProc" will apply a specific treatment to WM_MOUSEACTIVATE me
 
 3. Notify the UI so it can populate the current selection's address into the "RefEdit" control.
 
-I also included some features like the "F4" shortcut to convert the address, but this is not the main purpose of this project so I will not go into details.
+I also included some features like the "F4" shortcut to convert the address, but this is not the main purpose of this project so I will not run into the details.
 
 Demonstration
 --------
@@ -106,3 +106,14 @@ Note: DotNetRefEdit.xll is for Excel 32bit, DotNetRefEdit64.xll is for Excel 64b
 8. Focus to the "Augend" box and select A1. This will populate "[Book1]Sheet1!A1" into that box.
 
 9. Now focus on the "Addend" box and select A1 again. **The address will appear into the box, despite the "SheetSelectionChange" event was not raised.**
+
+Conclusion
+--------
+
+First, I want to thank Govert from the ExcelDna project, for all the help he provided in order to resolve these issues. Big thanks also for the ExcelDna project itself, which is amazing.
+
+https://github.com/Excel-DNA/ExcelDna
+
+The **DotNetRefEdit** project demonstrates that it is possible to create .Net add-ins for Excel where UIs can behave like function wizards and allow range selections into Excel, in an user-friendly way.
+
+The "RefEdit" control itself is not hard to implement. The difficuly resides in the window management. The solution is quite simple once you know it: hook the WH_CALLWNDPROC messages using the SetWindowsHookEx function ; when the hooked message is a WM_MOUSEACTIVATE and the underlying window is a workbook, then call SetFocus.
