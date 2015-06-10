@@ -2,7 +2,10 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
+using ExcelDna.Integration;
 using ExcelDna.Integration.CustomUI;
+using Application = Microsoft.Office.Interop.Excel.Application;
 
 namespace DotNetRefEdit
 {
@@ -21,8 +24,33 @@ namespace DotNetRefEdit
             _excelThreadId = WindowsInterop.GetCurrentThreadId();
         }
 
+        private bool CheckWorkbook()
+        {
+            try
+            {
+                Application app = (Application) ExcelDnaUtil.Application;
+                if (app.Workbooks.Count == 0)
+                {
+                    MessageBox.Show("Please open a workbook before starting UI.", "Error");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Couldn't check workbook: {0}", e);
+                return false;
+            }
+        }
+
         public void OpenWinFormInExcelThread(IRibbonControl control)
         {
+            if (!CheckWorkbook())
+            {
+                return;
+            }
+
             if (_refEditForm1 == null)
             {
                 try
@@ -44,6 +72,11 @@ namespace DotNetRefEdit
 
         public void OpenWinFormInSeparateThread(IRibbonControl control)
         {
+            if (!CheckWorkbook())
+            {
+                return;
+            }
+
             if (_refEditForm2 == null)
             {
                 Thread thread = new Thread(() =>
@@ -71,6 +104,11 @@ namespace DotNetRefEdit
 
         public void OpenWPFInExcelThread(IRibbonControl control)
         {
+            if (!CheckWorkbook())
+            {
+                return;
+            }
+
             if (_refEditWindow1 == null)
             {
                 try
@@ -92,6 +130,11 @@ namespace DotNetRefEdit
 
         public void OpenWPFInSeparateThread(IRibbonControl control)
         {
+            if (!CheckWorkbook())
+            {
+                return;
+            }
+
             if (_refEditWindow2 == null)
             {
                 Thread thread = new Thread(() =>
