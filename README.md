@@ -65,3 +65,44 @@ The solution available along with this project proposes 4 examples, all accessib
 The "Excel Thread" buttons launch a WinForm and a WPF window running in the Excel main thread. The "Separate Thread" buttons launch the same UIs in their own threads.
 
 When the UI is launched, it will subscribe to the "SheetSelectionChange" event and hook the WH_CALLWNDPROC messages. For more details on how to hook Windows messages, please refer to https://msdn.microsoft.com/en-us/library/windows/desktop/ms644959%28v=vs.85%29.aspx
+
+The hook method "CwpProc" will apply a specific treatment to WM_MOUSEACTIVATE messages. 
+
+1. Verify the window name. If the name is not "EXCEL7" then skip the treatment and call next hook.
+  
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms633582%28v=vs.85%29.aspx
+
+2. Set the focus to the window using SetFocus.
+  
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms646312%28v=vs.85%29.aspx
+
+3. Notify the UI so it can populate the current selection's address into the "RefEdit" control.
+
+I also included some features like the "F4" shortcut to convert the address, but this is not the main purpose of this project so I will not go into details.
+
+Demonstration
+--------
+
+Note: DotNetRefEdit.xll is for Excel 32bit, DotNetRefEdit64.xll is for Excel 64bit.
+
+1. Open the add-in and set "12" in A1 inside the active worksheet. Set "1", "2", 3" and "4" respectively in B1, B2, C1 and C2.
+
+2. Click on button "WinForm" in the "Separate Thread" section. Then click on the first text box, next to "Augend".
+
+  ![Prepare Selection](https://raw.github.com/Ron-Ldn/DotNetRefEdit/master/Screenshots/RefEditUI.png)
+
+3. Select A1 in the worksheet. **This is possible in one click.** Finally "[Book1]Sheet1!A1" shall appear in the text box.
+
+4. Now focus on the second text box, next to "Addend". Then select "B1:C2" in the worksheet. Once again **this is possible in one click**. Finally, "[Book1]Sheet1!B1:C2" will appear in the text box.
+
+5. The form will evaluate the sum automatically and "22" will appear in the box next to "Evaluation".
+
+6. Now select the output, let's say "A5", in the destination box. Finally click on the "Insert" button and this will insert the formula into A5: "=SUM(Sheet1!A1,Sheet1!B1:C2 )"
+
+  ![WholeForm](https://raw.github.com/Ron-Ldn/DotNetRefEdit/master/Screenshots/WholeForm.png)
+
+7. Focus to the first box again, remove the address. Now go to the worksheet, edit A1 and copy the value. Without escaping from the cell edition, return to the UI and paste the text into the text box. It works because the UI runs in its own thread so **it is not frozen when Excel is busy**.
+
+8. Focus to the "Augend" box and select A1. This will populate "[Book1]Sheet1!A1" into that box.
+
+9. Now focus on the "Addend" box and select A1 again. **The address will appear into the box, despite the "SheetSelectionChange" event was not raised.**
