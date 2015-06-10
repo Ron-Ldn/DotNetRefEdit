@@ -29,6 +29,11 @@ Several projects can be found on the internet which propose to implement the equ
 - If the UI runs in the Excel thread, then in some conditions it may be impossible for the user to manually edit a control within the UI because Excel will activate and put the focus to the last selected cell. The conditions to reproduce this are quite unclear to me though.
 - If the UI runs in its own thread, then the user will need to click twice into Excel in order to select a range. Actually, the first click will activate the window and then Excel will discard the message. The second click is to select the range into the activated window.
 
+Links:
+- http://blogs.msdn.com/b/gabhan_berry/archive/2008/06/12/net-refedit-control.aspx
+- http://www.codeproject.com/Articles/32805/RefEdit-Emulation-for-NET
+- http://www.codeproject.com/Articles/34425/VS-NET-Excel-Addin-Refedit-Control
+
 Solution
 --------
 The best option, according to me, is to run the UI in its own thread. The "must-click-twice" issue described above can be resolved by hooking the WH_CALLWNDPROC messages: if the message is of type "WM_MOUSEACTIVATE" and if the handle is an Excel workbook window (in which case, the window name will be "EXCEL7") then it is possible to set the focus to that window before Excel processes the message. 
@@ -59,3 +64,4 @@ The solution available along with this project proposes 4 examples, all accessib
 
 The "Excel Thread" buttons launch a WinForm and a WPF window running in the Excel main thread. The "Separate Thread" buttons launch the same UIs in their own threads.
 
+When the UI is launched, it will subscribe to the "SheetSelectionChange" event and hook the WH_CALLWNDPROC messages. For more details on how to hook Windows messages, please refer to https://msdn.microsoft.com/en-us/library/windows/desktop/ms644959%28v=vs.85%29.aspx
